@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { initializeFirebase } from "./Firebase";
+import "./shared/icons";
 
 ReactDOM.render(
   <React.StrictMode>
