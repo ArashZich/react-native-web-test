@@ -11,6 +11,7 @@ import {
   PageFour,
   ForgotPassword,
   Login,
+  SharePage,
 } from "../Screen";
 import { UserContext } from "../InitialPage";
 
@@ -59,6 +60,7 @@ function HomeNavigator() {
     <StackHome.Navigator>
       <StackHome.Screen name={"Home"} component={TabNavigator} />
       <StackHome.Screen name={"PageFour"} component={PageFour} />
+      <StackHome.Screen name={"SharePage"} component={SharePage} />
     </StackHome.Navigator>
   );
 }
