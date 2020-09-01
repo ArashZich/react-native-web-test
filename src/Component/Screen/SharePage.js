@@ -21,6 +21,13 @@ const SharePage = () => {
     await Linking.openURL(url);
   }, []);
 
+  const handleCall = useCallback(() => {
+    let phone = "1222222";
+    let contactNumber = phone;
+    console.log(Linking.canOpenURL(contactNumber), "LINK", Platform.OS);
+    Linking.openURL(`tel:${phone}`);
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.welcome}>Share Example!</Text>
@@ -61,6 +68,7 @@ const SharePage = () => {
         onPress={() => onSendSMSMessage("2345555", "TEST")}
         title="Send message"
       />
+      <Button onPress={() => handleCall()} title="Call" />
     </View>
   );
 };
