@@ -1,23 +1,30 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-
-import {
-  TelegramShareButton,
-  WhatsappShareButton,
-  EmailShareButton,
-  TelegramIcon,
-  WhatsappIcon,
-  EmailIcon,
-} from "react-share";
+import React, { useCallback } from "react";
+import { StyleSheet, Text, Button, View } from "react-native";
+import { Linking, Platform } from "react-native";
+// import {
+//   TelegramShareButton,
+//   WhatsappShareButton,
+//   EmailShareButton,
+//   TelegramIcon,
+//   WhatsappIcon,
+//   EmailIcon,
+// } from "react-share";
 
 const SharePage = () => {
-  const shareUrl = "http://github.com";
-  const title = "GitHub";
+  const telegramId = "ArashZich";
+  const mail = "zenith.arash@gmail.com";
+  const txtTest = "Hello";
+
+  const onSendSMSMessage = useCallback(async (phoneNumber, message) => {
+    const separator = Platform.OS === "ios" ? "&" : "?";
+    const url = `sms:${phoneNumber}${separator}body=${message}`;
+    await Linking.openURL(url);
+  }, []);
 
   return (
     <View style={styles.container}>
       <Text style={styles.welcome}>Share Example!</Text>
-      <WhatsappShareButton
+      {/* <WhatsappShareButton
         url={shareUrl}
         title={title}
         separator=":: "
@@ -40,7 +47,20 @@ const SharePage = () => {
         className="Demo__some-network__share-button"
       >
         <EmailIcon size={32} round />
-      </EmailShareButton>
+      </EmailShareButton> */}
+      <Button
+        onPress={() => Linking.openURL(`https://t.me/${telegramId}`)}
+        title="Telegram"
+      />
+      <Button onPress={() => Linking.openURL(`mailto:${mail}`)} title="Mail" />
+      <Button
+        onPress={() => Linking.openURL(`whatsapp://send?text=${txtTest}`)}
+        title="Send WhatsApp"
+      />
+      <Button
+        onPress={() => onSendSMSMessage("2345555", "TEST")}
+        title="Send message"
+      />
     </View>
   );
 };
