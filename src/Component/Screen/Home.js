@@ -7,16 +7,8 @@ const Home = ({ navigation }) => {
   const [list, setList] = useState([]);
 
   axios.interceptors.request.use(function (config) {
-    const token =
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InRoY29iMDg5NyIsIm5hbWVpZCI6Ijk0MCIsImdyb3Vwc2lkIjoiNTQwIiwiY2VydHNlcmlhbG51bWJlciI6ImFwdmFvLWJ3Nmk2LTluNHRqLWVkbnU4IiwibmJmIjoxNTk5MDMzODEyLCJleHAiOjE1OTkyOTMwMTIsImlhdCI6MTU5OTAzMzgxMn0.nPdeAvkLgZSBtULBgWDD0BzWBortEYVMpaPSzBVC9Y4";
-
+    const token = "";
     config.headers = {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-      "Access-Control-Allow-Credentials": "true",
-      "Access-Control-Allow-Headers":
-        "Origin,Cache-Control,Accept,X-Access-Token ,X-Requested-With, Content-Type, Access-Control-Request-Method",
       Authorization: token,
     };
 
@@ -25,14 +17,11 @@ const Home = ({ navigation }) => {
   const getToken = () => {
     axios({
       method: "post",
-      url: "http://crmapi.cobeldarou.com/api/Token",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
+      // url: "http://crmapi.cobeldarou.com/api/Token",
+      url: "https://simpleapi.abidipharma.com/api/Token",
       data: {
-        UserName: "thcob0897",
-        Password: "20151",
+        UserName: "",
+        Password: "",
       },
     })
       .then((res) => setState(res.data))
@@ -42,7 +31,7 @@ const Home = ({ navigation }) => {
   const getPerson = () => {
     axios({
       method: "get",
-      url: "http://crmapi.cobeldarou.com/api/Person",
+      url: "https://simpleapi.abidipharma.com/api/Person",
     })
       .then((res) => setList(res.data))
       .catch((err) => console.log(err));

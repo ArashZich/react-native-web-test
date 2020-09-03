@@ -1,19 +1,15 @@
-import React, { useCallback } from "react";
-import { StyleSheet, Text, Button, View } from "react-native";
+import React, { useCallback, useState, useRef, useEffect } from "react";
+import { StyleSheet, Text, Button, View, AppState } from "react-native";
 import { Linking, Platform } from "react-native";
-// import {
-//   TelegramShareButton,
-//   WhatsappShareButton,
-//   EmailShareButton,
-//   TelegramIcon,
-//   WhatsappIcon,
-//   EmailIcon,
-// } from "react-share";
 
 const SharePage = () => {
+  const [seconds, setSeconds] = useState(0);
+  const [isActive, setIsActive] = useState(false);
   const telegramId = "ArashZich";
   const mail = "zenith.arash@gmail.com";
   const txtTest = "Hello";
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
   const onSendSMSMessage = useCallback(async (phoneNumber, message) => {
     const separator = Platform.OS === "ios" ? "&" : "?";
@@ -21,40 +17,50 @@ const SharePage = () => {
     await Linking.openURL(url);
   }, []);
 
-  const handleCall = useCallback(() => {
-    let phone = "1222222";
-    let contactNumber = phone;
-    console.log(Linking.canOpenURL(contactNumber), "LINK", Platform.OS);
-    Linking.openURL(`tel:${phone}`);
+  const toggle = useCallback((item) => {
+    setIsActive(item);
   }, []);
+
+  const handleCall = () => {
+    let phone = "1222222";
+    Linking.openURL(`tel:${phone}`);
+    _handleAppStateChange();
+  };
+
+  const _handleAppStateChange = (nextAppState) => {
+    if (nextAppState === "inactive" || nextAppState === "background") {
+      toggle(true);
+    } else {
+      toggle(false);
+    }
+
+    appState.current = nextAppState;
+    setAppStateVisible(appState.current);
+  };
+
+  useEffect(() => {
+    let interval = null;
+    // AppState.addEventListener("change", _handleAppStateChange);
+    if (isActive) {
+      interval = setInterval(() => {
+        setSeconds((seconds) => seconds + 1);
+      }, 1000);
+    } else if (!isActive && seconds !== 0) {
+      clearInterval(interval);
+    }
+    return () => {
+      clearInterval(interval);
+      AppState.removeEventListener("change", _handleAppStateChange);
+    };
+  }, [isActive, seconds]);
 
   return (
     <View style={styles.container}>
       <Text style={styles.welcome}>Share Example!</Text>
-      {/* <WhatsappShareButton
-        url={shareUrl}
-        title={title}
-        separator=":: "
-        className="Demo__some-network__share-button"
-      >
-        <WhatsappIcon size={32} round />
-      </WhatsappShareButton>
-      <TelegramShareButton
-        url={shareUrl}
-        title={title}
-        className="Demo__some-network__share-button"
-      >
-        <TelegramIcon size={32} round />
-      </TelegramShareButton>
-      <EmailShareButton
-        url={shareUrl}
-        subject={title}
-        body="body"
-        separator=" "
-        className="Demo__some-network__share-button"
-      >
-        <EmailIcon size={32} round />
-      </EmailShareButton> */}
+      <Text style={styles.welcome}>{seconds}</Text>
+      <Text style={styles.welcome}>{appStateVisible}</Text>
+      <Button onPress={toggle} title={isActive ? "Pause" : "Start"} />
+
       <Button
         onPress={() => Linking.openURL(`https://t.me/${telegramId}`)}
         title="Telegram"
